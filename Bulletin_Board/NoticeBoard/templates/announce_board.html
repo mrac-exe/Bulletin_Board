@@ -1,0 +1,58 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Board
+{% endblock title %}
+
+{% block content %}
+<h3> Всего объявлений: {{ page_obj.paginator.count }} </h3>
+<a href="/create/" class="btn btn-success btn-fill" >Создать объявление</a>
+{% if announce_board %}
+<table>
+    <tr>
+        <td width="150"><h4>Заголовок</h4></td>
+        <td width="150"><h4>Категория</h4></td>
+        <td width="150"><h4>Дата публикации</h4></td>
+        <td width="500"><h4>Предпросмотр</h4></td>
+        <td width="150">К объявлению</td>
+        <td width="150"><h4>Автор</h4></td>
+    </tr>
+        {% for announce in announce_board %}
+    <tr>
+        <td> {{ announce.title }} </td>
+        <td> {% for category in announce.category.all %}
+            <a href="{% url 'category_list' category.id %}"> {{ category }}</a>
+            {% endfor %} </td>
+        <td> {{ announce.date_time|date:'d.m.y' }} </td>
+        <td> {{ announce.text|safe|truncatechars:110 }} </td>
+        <td><a href="{% url 'announce_detail' announce.id %}" class="btn">Откликнуться</a></td>
+        <td> {{announce.author}} </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<h2>Пока никаких новостей нет, но скоро здесь будет интересно!</h2>
+{% endif %}
+
+{# Информация о предыдущих страницах #}
+{% if page_obj.has_previous %}
+   <a href="?page=1">1</a>
+   {% if page_obj.previous_page_number != 1 %}
+       ...
+       <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+   {% endif %}
+{% endif %}
+
+{# Информация о текущей странице #}
+{{ page_obj.number }}
+
+{# Информация о следующих страницах #}
+{% if page_obj.has_next %}
+   <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+   {% if paginator.num_pages != page_obj.next_page_number %}
+       ...
+       <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+   {% endif %}
+{% endif %}
+
+{% endblock content %}

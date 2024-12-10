@@ -1,0 +1,28 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+    <input type="button" onclick="history.back();" class="btn btn-outline-secondary btn-sm" value="Вернуться назад"/>
+<br>
+<br>
+<br>
+<h2>Личный кабинет {{ request.user.username }}</h2>
+<div>Здесь скоро что-то будет</div>
+<br>
+<form action="" method="get">
+    {{ filterset.form }}
+    <input type="submit" value="Найти">
+</form>
+<button> <a href="/users/profile/">Сбросить фильтр</a></button>
+<h4>Все отклики на выбранное объявление</h4>
+{% if comments %}
+{% for reply in comments %}
+<p>{{ reply.user }}</p>
+<p>{{ reply.text }} <a href="{% url 'reply_author_delete' reply.id %}"class="btn">Удалить</a>
+    {% if reply.is_accepted == False and reply.user.id is not request.user.id %}
+<a href="{% url 'reply_accept' reply.id %}" class="btn">Принять</a></p>
+{% endif %}
+{% endfor %}
+{% endif %}
+<br>
+<button> <a href="/logout/">Выйти</a></button>
+{% endblock content %}

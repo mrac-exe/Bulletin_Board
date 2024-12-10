@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <title>Django-проект "Доска объявлений" by Юлия Баутина</title>
+          <style>
+           .btn {
+            display: inline-block;
+            background: #FDF5E6;
+            padding: 0.5rem 0.5rem;
+            text-decoration: none;
+            border-radius: 3px;
+           }
+          </style>
+            {% load static %}
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </head>
+    <body>
+    {% if user.is_authenticated %}
+    <div class="dropdown">
+        <button class="btn btn-primary my-btn dropdown-toggle me-3" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            {{ request.user }}
+        </button>
+        <li>
+    <a class="dropdown-item dd-item-color" href="/users/profile/">Профиль</a>
+</li>
+        <ul class="dropdown-menu dd-color">
+            <li><a class="dropdown-item dd-item-color" href="{% url 'logout' %}">Выйти</a></li>
+        </ul>
+    </div>
+{% else %}
+    <li class="nav-item">
+        <a class="nav-link btn btn-primary my-btn me-3"
+           href="/accounts/login/">Войти</a>
+    </li>
+    {% endif %}
+
+<!-- Site navigation menu -->
+        <ul class="navbar">
+          <li><a href="/">На главную страницу</a>
+          <li><a href="/create/">Создать объявление</a>
+        </ul>
+
+    <div class="section section-header">
+        <div class="parallax filter filter-color-black">
+           <div class="container">
+                   <div class="title-area">
+                    <h1 class="title-modern">Доска объявлений таверны "Копытом в рыло"</h1>
+                   <div class="separator line-separator">------------------------♦------------------------</div></div>
+         </div>
+<br>
+       </div>
+             <div class="container1">
+                <div class="content">
+
+                        <div class="title-modern text-center">
+                            {% block content %}
+                            {{ flatpage.content }}
+                            {% endblock content %}
+                        </div>
+
+                </div>
+            </div>
+    </div>
+
+    </body>
+</html>

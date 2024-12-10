@@ -1,0 +1,57 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Announce
+{% endblock title %}
+
+{% block content %}
+<a href="/" class="btn" >На главную страницу</a>
+<h1> {{announce.title}} </h1>
+<h4> Автор: {{announce.author}} </h4>
+<h3>Опубликовано: {{ announce.date_time|date:'d.m.y' }}</h3>
+{% if announce.author.user == request.user %}
+<a href="{% url 'announce_update' announce.id %}" class="btn">Редактировать</a>
+<a href="{% url 'announce_delete' announce.id %}"class="btn">Удалить</a>
+{% endif %}
+<h3> {{announce.text|safe}} </h3>
+{% if user.is_authenticated %}
+<div class="d-flex justify-content-center">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <form method="post">
+                {% csrf_token %}
+                {{ reply_form }}
+                <input type="submit" value="Отправить" />
+            </form>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="d-flex justify-content-center">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <p>Отклики могут оставлять только зарегистрированные пользователи</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+<br>
+<h3>Все отклики</h3>
+{% if comments %}
+{% for comment in comments %}
+<table>
+    <tr>
+<td> {{ comment.user.username }}</td>
+<br>
+        <td>{{ comment.date_time }}</td>
+<br>
+        <td>{{ comment.text }}</td>
+    </tr>
+    </table>
+{% if comment.user == request.user %}
+<a href="{% url 'reply_update' comment.id %}" class="btn">Редактировать</a>
+<a href="{% url 'reply_delete' comment.id %}"class="btn">Удалить</a>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endblock content %}

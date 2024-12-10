@@ -1,0 +1,59 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Объявления
+{% endblock title %}
+
+{% block content %}
+<h3> Всего объявлений: {{ page_obj.paginator.count }} </h3>
+{% if is_not_subscriber %}
+<p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary btn-sm">Подписаться на категорию {{ category }}</a></p>
+{% endif %}
+
+{% if category_announce_list %}
+<table>
+    <tr>
+        <td>Автор</td>
+        <td>Заголовок</td>
+        <td>Категория</td>
+        <td>Дата публикации</td>
+        <td>Текст</td>
+    </tr>
+    {% for announce in category_announce_list %}
+    <tr>
+        <td> {{ announce.author }} </td>
+        <td> {{ announce.title }} </td>
+        <td> {% for category in announce.category.all %}
+            <a href="{% url 'category_list' category.id %}"> {{ category }}</a>
+            {% endfor %} </td>
+        <td> {{ announce.date_time|date:'d.m.y' }} </td>
+        <td> {{ announce.text|safe|truncatechars:20 }} </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<h2>Пока никаких объявлений нет, но скоро здесь будет интересно!</h2>
+{% endif %}
+
+{# Информация о предыдущих страницах #}
+{% if page_obj.has_previous %}
+   <a href="?page=1">1</a>
+   {% if page_obj.previous_page_number != 1 %}
+       ...
+       <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+   {% endif %}
+{% endif %}
+
+{# Информация о текущей странице #}
+{{ page_obj.number }}
+
+{# Информация о следующих страницах #}
+{% if page_obj.has_next %}
+   <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+   {% if paginator.num_pages != page_obj.next_page_number %}
+       ...
+       <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+   {% endif %}
+{% endif %}
+
+{% endblock content %}

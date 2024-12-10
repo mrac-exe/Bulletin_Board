@@ -1,0 +1,6 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h2>Здравствуйте! В вашем любимом разделе опубликовано новое <a href="{{ link }}">объявление</a>!</h2>
+<p>{{ text|safe }}</p>
+{% endblock %}
